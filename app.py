@@ -20,7 +20,7 @@ st.set_page_config(
     page_title="ENS — Formación Integral",
     page_icon="⚜️",
     layout="centered",
-    initial_sidebar_state="collapsed",
+    initial_sidebar_state="expanded",
 )
 
 # ── Confetti helpers ──────────────────────────────
@@ -345,6 +345,13 @@ with st.sidebar:
     HEADERS = {"— APRENDER —", "— PRACTICAR —", "— EVALUAR —", "— HERRAMIENTAS —"}
     NAV_OPTS = [p for p in PAGES if p not in HEADERS]
 
+    st.markdown("""
+    <div style="background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.35);
+                border-radius:10px;padding:9px 12px;margin-bottom:10px;font-size:.82rem;
+                color:#ffd700;text-align:center;line-height:1.5;">
+        👆 Toca una sección para navegar
+    </div>""", unsafe_allow_html=True)
+
     # Inyectar CSS para los separadores de sección dentro del radio
     st.markdown("""
     <style>
@@ -415,21 +422,28 @@ if active == "🗺️ Mi Ruta ENS":
         ("4","🎯 Casos Prácticos","Resuelve situaciones reales usando la Carta como guía.","decisor"),
         ("5","⚡ Modo Relámpago","Velocidad y precisión: responde 15 preguntas en 60 segundos.","velocista"),
         ("6","🃏 Tarjetas de Memoria","Memoriza los 18 conceptos clave del glosario ENS.","memorizador"),
-        ("7","🧠 Quiz Principal","Quiz integral de todos los temas del movimiento.","conocedor"),
+        ("7","🧠 Quiz Interactivo","Quiz integral de todos los temas del movimiento.","conocedor"),
         ("8","🏆 Test de Maestría","El examen final: 20 preguntas profundas para el experto.","maestro"),
     ]
     for num, sec, desc, badge_key in rutas:
         done = badge_key in st.session_state.badges
         color = "#2d7a4f" if done else "#1a2744"
         check = "✅" if done else "⬜"
-        st.markdown(f"""
-        <div class="step" style="border-left:5px solid {color};">
-            <div class="step-num" style="background:{color};">{num}</div>
-            <div>
-                <h4 style="margin:0 0 2px;">{check} {sec}</h4>
-                <p style="margin:0;color:#4a5568;font-size:.9rem;">{desc}</p>
-            </div>
-        </div>""", unsafe_allow_html=True)
+        col_txt, col_btn = st.columns([5, 1])
+        with col_txt:
+            st.markdown(f"""
+            <div class="step" style="border-left:5px solid {color};margin-bottom:4px;">
+                <div class="step-num" style="background:{color};">{num}</div>
+                <div>
+                    <h4 style="margin:0 0 2px;">{check} {sec}</h4>
+                    <p style="margin:0;color:#4a5568;font-size:.9rem;">{desc}</p>
+                </div>
+            </div>""", unsafe_allow_html=True)
+        with col_btn:
+            st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
+            if st.button("Ir →", key=f"ruta_btn_{num}"):
+                st.session_state.main_nav = sec
+                st.rerun()
 
     # ── Insignias ───────────────────────────────────
     st.markdown('<div class="sec-title">🏅 Mis Insignias</div>', unsafe_allow_html=True)
