@@ -287,6 +287,32 @@ html,body,[class*="css"]{font-family:'Lato',sans-serif;}
 </style>
 """, unsafe_allow_html=True)
 
+# ── Navigation options (global so buttons outside sidebar can use them) ──
+PAGES = [
+    "— APRENDER —",
+    "🗺️ Mi Ruta ENS",
+    "📜 Historia",
+    "⚖️ La Carta",
+    "✨ Mística y Espíritu",
+    "🏛️ Estructura y Roles",
+    "📅 Reunión Mensual",
+    "— PRACTICAR —",
+    "✍️ Completar la Frase",
+    "🎯 Casos Prácticos",
+    "⚡ Modo Relámpago",
+    "🃏 Tarjetas de Memoria",
+    "🧠 Quiz Interactivo",
+    "— EVALUAR —",
+    "🏆 Test de Maestría",
+    "— HERRAMIENTAS —",
+    "📋 Mis Compromisos",
+    "📖 Glosario",
+]
+HEADERS = {"— APRENDER —", "— PRACTICAR —", "— EVALUAR —", "— HERRAMIENTAS —"}
+NAV_OPTS = [p for p in PAGES if p not in HEADERS]
+if "nav_idx" not in st.session_state:
+    st.session_state.nav_idx = 0
+
 # ── Sidebar ───────────────────────────────────────
 with st.sidebar:
     if LOGO_B64:
@@ -322,29 +348,6 @@ with st.sidebar:
         <span style="color:#c8d8f0;font-size:.85rem;margin-left:10px;">🏅 {nb}/{len(BADGES)} insignias</span>
     </div>""", unsafe_allow_html=True)
 
-    PAGES = [
-        "— APRENDER —",
-        "🗺️ Mi Ruta ENS",
-        "📜 Historia",
-        "⚖️ La Carta",
-        "✨ Mística y Espíritu",
-        "🏛️ Estructura y Roles",
-        "📅 Reunión Mensual",
-        "— PRACTICAR —",
-        "✍️ Completar la Frase",
-        "🎯 Casos Prácticos",
-        "⚡ Modo Relámpago",
-        "🃏 Tarjetas de Memoria",
-        "🧠 Quiz Interactivo",
-        "— EVALUAR —",
-        "🏆 Test de Maestría",
-        "— HERRAMIENTAS —",
-        "📋 Mis Compromisos",
-        "📖 Glosario",
-    ]
-    HEADERS = {"— APRENDER —", "— PRACTICAR —", "— EVALUAR —", "— HERRAMIENTAS —"}
-    NAV_OPTS = [p for p in PAGES if p not in HEADERS]
-
     st.markdown("""
     <div style="background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.35);
                 border-radius:10px;padding:9px 12px;margin-bottom:10px;font-size:.82rem;
@@ -358,8 +361,11 @@ with st.sidebar:
     div[data-testid="stSidebar"] .stRadio div[role="radiogroup"] { gap: 0; }
     </style>""", unsafe_allow_html=True)
 
-    active = st.radio("Navegación", NAV_OPTS, label_visibility="collapsed", key="main_nav",
-                      format_func=lambda x: x)
+    active = st.radio("Navegación", NAV_OPTS, label_visibility="collapsed",
+                      index=st.session_state.nav_idx,
+                      format_func=lambda x: x,
+                      key="main_nav_radio")
+    st.session_state.nav_idx = NAV_OPTS.index(active)
 
 # ── Global helpers ────────────────────────────────
 def hero(title, subtitle, badge=""):
@@ -442,7 +448,7 @@ if active == "🗺️ Mi Ruta ENS":
         with col_btn:
             st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
             if st.button("Ir →", key=f"ruta_btn_{num}"):
-                st.session_state.main_nav = sec
+                st.session_state.nav_idx = NAV_OPTS.index(sec)
                 st.rerun()
 
     # ── Insignias ───────────────────────────────────
