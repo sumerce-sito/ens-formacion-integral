@@ -510,9 +510,14 @@ elif active == "📜 Historia":
         if st.session_state.adivina_idx < len(HISTORY_EVENTS):
             ev = HISTORY_EVENTS[st.session_state.adivina_order[st.session_state.adivina_idx]]
             st.markdown(f'<div class="qcard"><div class="qtxt">"{ev["event"]}"</div></div>', unsafe_allow_html=True)
-            all_yrs = [e["year"] for e in HISTORY_EVENTS]
-            wrongs = random.sample([y for y in all_yrs if y != ev["year"]], 3)
-            opts = sorted(wrongs + [ev["year"]])
+
+            # Generate options once per question and lock them in session_state
+            opts_key = f"adivina_opts_{st.session_state.adivina_idx}"
+            if opts_key not in st.session_state:
+                all_yrs = [e["year"] for e in HISTORY_EVENTS]
+                wrongs = random.sample([y for y in all_yrs if y != ev["year"]], 3)
+                st.session_state[opts_key] = sorted(wrongs + [ev["year"]])
+            opts = st.session_state[opts_key]
 
             if not st.session_state.adivina_answered:
                 sel = st.radio("Año:", [str(y) for y in opts], horizontal=True, key=f"a_{st.session_state.adivina_idx}")
@@ -544,6 +549,9 @@ elif active == "📜 Historia":
                 st.session_state.adivina_idx = 0; st.session_state.adivina_score = 0
                 st.session_state.adivina_total = 0; st.session_state.adivina_answered = False
                 st.session_state.adivina_order = random.sample(range(len(HISTORY_EVENTS)), len(HISTORY_EVENTS))
+                for k in list(st.session_state.keys()):
+                    if k.startswith("adivina_opts_"):
+                        del st.session_state[k]
                 st.rerun()
 
     with tab3:
