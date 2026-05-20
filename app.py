@@ -348,24 +348,44 @@ with st.sidebar:
         <span style="color:#c8d8f0;font-size:.85rem;margin-left:10px;">🏅 {nb}/{len(BADGES)} insignias</span>
     </div>""", unsafe_allow_html=True)
 
-    st.markdown("""
-    <div style="background:rgba(255,215,0,.12);border:1px solid rgba(255,215,0,.35);
-                border-radius:10px;padding:9px 12px;margin-bottom:10px;font-size:.82rem;
-                color:#ffd700;text-align:center;line-height:1.5;">
-        👆 Toca una sección para navegar
-    </div>""", unsafe_allow_html=True)
-
-    # Inyectar CSS para los separadores de sección dentro del radio
-    st.markdown("""
-    <style>
-    div[data-testid="stSidebar"] .stRadio div[role="radiogroup"] { gap: 0; }
+    st.markdown("""<style>
+    div[data-testid="stSidebar"] .stButton > button {
+        width:100%; text-align:left; background:transparent;
+        border:none; color:#f0e6c8!important; padding:7px 10px;
+        border-radius:8px; font-size:.95rem; transition:all .2s;
+    }
+    div[data-testid="stSidebar"] .stButton > button:hover {
+        background:rgba(255,215,0,.15)!important; color:#ffd700!important;
+        padding-left:16px;
+    }
+    div[data-testid="stSidebar"] .nav-active > button {
+        background:rgba(255,215,0,.2)!important; color:#ffd700!important;
+        border-left:3px solid #ffd700!important; font-weight:700;
+    }
+    div[data-testid="stSidebar"] .nav-header {
+        color:#a0b4d0; font-size:.72rem; text-transform:uppercase;
+        letter-spacing:.1em; padding:10px 10px 3px; margin-top:4px;
+    }
     </style>""", unsafe_allow_html=True)
 
-    active = st.radio("Navegación", NAV_OPTS, label_visibility="collapsed",
-                      index=st.session_state.nav_idx,
-                      format_func=lambda x: x,
-                      key="main_nav_radio")
-    st.session_state.nav_idx = NAV_OPTS.index(active)
+    section_headers = {
+        "🗺️ Mi Ruta ENS": "— APRENDER —",
+        "✍️ Completar la Frase": "— PRACTICAR —",
+        "🏆 Test de Maestría": "— EVALUAR —",
+        "📋 Mis Compromisos": "— HERRAMIENTAS —",
+    }
+    for i, page in enumerate(NAV_OPTS):
+        if page in section_headers:
+            st.markdown(f'<div class="nav-header">{section_headers[page]}</div>', unsafe_allow_html=True)
+        is_active = (i == st.session_state.nav_idx)
+        css_class = "nav-active" if is_active else ""
+        st.markdown(f'<div class="{css_class}">', unsafe_allow_html=True)
+        if st.button(page, key=f"nav_btn_{i}", use_container_width=True):
+            st.session_state.nav_idx = i
+            st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
+
+active = NAV_OPTS[st.session_state.nav_idx]
 
 # ── Global helpers ────────────────────────────────
 def hero(title, subtitle, badge=""):
