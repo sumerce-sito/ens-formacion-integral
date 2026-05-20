@@ -307,6 +307,7 @@ PAGES = [
     "— HERRAMIENTAS —",
     "📋 Mis Compromisos",
     "📖 Glosario",
+    "📥 Biblioteca",
 ]
 HEADERS = {"— APRENDER —", "— PRACTICAR —", "— EVALUAR —", "— HERRAMIENTAS —"}
 NAV_OPTS = [p for p in PAGES if p not in HEADERS]
@@ -1238,3 +1239,85 @@ elif active == "📖 Glosario":
     st.markdown('<div class="sec-title">Citas Fundamentales</div>', unsafe_allow_html=True)
     for txt,auth in CAFFAREL_QUOTES:
         bq(txt, auth)
+
+# ════════════════════════════════════════════════════════
+#  📥  BIBLIOTECA DE DOCUMENTOS
+# ════════════════════════════════════════════════════════
+elif active == "📥 Biblioteca":
+    hero("Biblioteca ENS", "Documentos oficiales del movimiento para descargar y profundizar", "📥 28 documentos · Fuentes primarias")
+
+    _DOCS_DIR = os.path.join(os.path.dirname(__file__), "docs")
+
+    biblioteca = {
+        "📋 Documentos Fundamentales": [
+            ("Carta-Fundacional.pdf",           "⚖️ Carta Fundacional",                   "El documento base de todo el movimiento (P. Caffarel, 1947)."),
+            ("Guia-ENS.pdf",                    "📘 Guía de los ENS",                     "Guía oficial completa del movimiento en español."),
+            ("Regla-de-Vida.pdf",               "📜 Regla de Vida",                       "Las obligaciones concretas que estructuran la vida del equipista."),
+            ("Vocacion-y-Mision.pdf",           "✨ Vocación y Misión",                    "Reflexión sobre la vocación y misión de la pareja cristiana."),
+            ("Carta-Pastoral-ERI.pdf",          "🌐 Carta Pastoral del ERI",              "Carta del Equipo Responsable Internacional a todas las parejas."),
+        ],
+        "🙏 Vida Espiritual": [
+            ("La-Sentada.pdf",                  "🪑 La Sentada (Deber de Sentarse)",       "Guía para el diálogo conyugal mensual — el corazón de la espiritualidad ENS."),
+            ("Oracion-Conyugal.pdf",            "🕊️ La Oración Conyugal",                 "Cómo vivir juntos la oración como pareja."),
+            ("El-Retiro.pdf",                   "🏔️ El Retiro Anual",                     "Orientaciones para el retiro espiritual de la pareja."),
+            ("Puntos-Concretos-de-Esfuerzo.pdf","🎯 Puntos Concretos de Esfuerzo",        "Los PCE: compromisos personales de crecimiento espiritual."),
+            ("Escucha-de-la-Palabra.pdf",       "📖 Escucha de la Palabra",               "La lectio divina y la escucha del Evangelio en la vida ENS."),
+            ("Mistica-ENS.pdf",                 "✝️ Mística ENS",                         "Los fundamentos místicos y espirituales del movimiento."),
+            ("La-Eucaristia.pdf",               "🍞 La Eucaristía",                       "La Eucaristía como centro de la vida conyugal y familiar."),
+        ],
+        "🎭 Roles y Servicio": [
+            ("Matrimonio-Responsable-de-Equipo.pdf", "⭐ Matrimonio Responsable de Equipo", "El papel del Hogar Responsable dentro del equipo."),
+            ("Sacerdote-Consiliario.pdf",        "✝️ El Sacerdote Consiliario",            "El acompañamiento espiritual del consiliario en los ENS."),
+            ("Guia-Matrimonio-Enlace.pdf",       "🔗 Guía del Matrimonio Enlace",          "El Hogar de Enlace: cómo cuidar un sector de equipos."),
+            ("Guia-Hogar-Informador.pdf",        "📣 Guía del Hogar Informador",           "El rol de comunicación entre el centro y los equipos."),
+            ("Equipos-Veteranos.pdf",            "🏅 Equipos Veteranos",                   "Orientaciones para equipos con larga trayectoria."),
+        ],
+        "👤 P. Henri Caffarel": [
+            ("Caffarel-Profeta-del-Matrimonio.pdf","🕯️ Caffarel, Profeta del Matrimonio",  "Extracto de textos del fundador sobre el matrimonio cristiano."),
+            ("Aquila-y-Priscila.pdf",            "💑 Áquila y Priscila",                   "La pareja bíblica patrona del movimiento."),
+            ("El-Corazon-del-Equipo.pdf",        "❤️ El Corazón del Equipo",               "Reflexión sobre la fraternidad y el amor entre las parejas."),
+        ],
+        "📖 Temas de Estudio": [
+            ("Tema-de-Estudio-2025-2026.pdf",    "📗 Tema de Estudio 2025–2026",           "El tema oficial del año en curso para todos los equipos."),
+            ("Tema-de-Estudio-2024-2025.pdf",    "📙 Tema de Estudio 2024–2025",           "Tema del año anterior para referencia y profundización."),
+            ("Guia-Completa-Estudio.pdf",        "📚 Guía Completa de Estudio",            "Compendio de los temas de estudio en español."),
+        ],
+        "🌱 Pilotaje": [
+            ("Manual-Matrimonio-Piloto.pdf",     "📋 Manual del Matrimonio Piloto",        "Guía para las parejas que inician el proceso de pilotaje."),
+            ("Guia-Pilotaje.pdf",                "🗺️ Guía de Pilotaje",                    "El itinerario completo del pilotaje hasta la Carta."),
+        ],
+        "✨ Espiritualidad Conyugal": [
+            ("Sexualidad-y-Espiritualidad-Conyugal.pdf", "💛 Sexualidad y Espiritualidad Conyugal", "La integración de la sexualidad en la espiritualidad cristiana."),
+            ("Taller-Santidad-Conyugal.pdf",     "🌟 Taller: Santidad Conyugal",           "Taller vivencial sobre la vocación a la santidad en el matrimonio."),
+            ("Envio-Turin-2024.pdf",             "🕊️ Envío — Turín 2024",                  "Mensaje y envío del encuentro internacional de Turín 2024."),
+        ],
+    }
+
+    for categoria, docs in biblioteca.items():
+        st.markdown(f'<div class="sec-title">{categoria}</div>', unsafe_allow_html=True)
+        for filename, titulo, descripcion in docs:
+            filepath = os.path.join(_DOCS_DIR, filename)
+            col1, col2 = st.columns([5, 1])
+            with col1:
+                st.markdown(f"""
+                <div class="step" style="margin-bottom:6px;">
+                    <div style="font-size:1.4rem;flex-shrink:0;">{titulo.split()[0]}</div>
+                    <div>
+                        <h4 style="margin:0 0 2px;">{" ".join(titulo.split()[1:])}</h4>
+                        <p style="margin:0;color:#4a5568;font-size:.88rem;">{descripcion}</p>
+                    </div>
+                </div>""", unsafe_allow_html=True)
+            with col2:
+                st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
+                if os.path.exists(filepath):
+                    with open(filepath, "rb") as f:
+                        st.download_button(
+                            label="⬇️",
+                            data=f.read(),
+                            file_name=filename,
+                            mime="application/pdf",
+                            key=f"dl_{filename}",
+                            use_container_width=True,
+                        )
+                else:
+                    st.caption("—")
